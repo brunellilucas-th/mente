@@ -1,0 +1,22 @@
+{
+ "version": "1",
+ "files": [
+  "./",
+  "index.html",
+  "style.css",
+  "manifest.webmanifest",
+  "js/app.js",
+  "js/sudoku.js",
+  "js/memotest.js",
+  "js/g2048.js",
+  "js/buscaminas.js",
+  "js/nonograma.js",
+  "js/calculo.js",
+  "js/palabras.js",
+  "js/palabra.js",
+  "icons/apple-touch-icon.png",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/icon-maskable-512.png"
+ ]
+}

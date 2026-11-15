@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Mente</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mente">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f4f2fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15131c" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="top">
+  <button id="back" type="button" hidden>‹ Juegos</button>
+  <h1 id="title">Mente</h1>
+  <div id="right"></div>
+</header>
+<main id="view"></main>
+<div id="toast" role="status"></div>
+<script src="js/app.js"></script>
+<script src="js/sudoku.js"></script>
+<script src="js/memotest.js"></script>
+<script src="js/g2048.js"></script>
+<script src="js/buscaminas.js"></script>
+<script src="js/nonograma.js"></script>
+<script src="js/calculo.js"></script>
+<script src="js/palabras.js"></script>
+<script src="js/palabra.js"></script>
+<script>App.start();</script>
+</body>
+</html>
