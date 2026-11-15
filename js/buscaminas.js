@@ -1,5 +1,5 @@
 (() => {
-  const { el, fmtTime, timer, record, getRec, played, modal } = App;
+  const { el, fmtTime, timer, record, getRec, played, modal, levelBtn, winLevel, unlockText } = App;
   const LEVELS = [
     { id: "facil", name: "Fácil", w: 9, h: 9, m: 10 },
     { id: "medio", name: "Medio", w: 12, h: 14, m: 28 },
@@ -11,9 +11,9 @@
     function chooser() {
       if (T) { T.kill(); T = null; } ctx.right(); view.innerHTML = "";
       view.append(el("p", { class: "muted" }, "Tocá para abrir una casilla. Mantené apretado (o usá el modo 🚩) para marcar una mina."),
-        el("div", { class: "levels" }, LEVELS.map(L => {
+        el("div", { class: "levels" }, LEVELS.map((L, i) => {
           const b = getRec("buscaminas", L.id);
-          return el("button", { onclick: () => play(L) }, el("b", {}, L.name), el("small", {}, `${L.w}×${L.h} · ${L.m} minas` + (b != null ? ` · récord ${fmtTime(b)}` : "")));
+          return levelBtn("buscaminas", LEVELS, i, `${L.w}×${L.h} · ${L.m} minas` + (b != null ? ` · récord ${fmtTime(b)}` : ""), play);
         })));
     }
     function play(L) {
@@ -74,8 +74,9 @@
         for (let k = 0; k < N; k++) if (mine[k]) flag[k] = true;
         draw();
         const r = record("buscaminas", L.id, Math.round(T.get()), "low");
-        modal({ icon: "🚩", title: "¡Despejado!", text: `${L.name} en <b>${fmtTime(T.get())}</b>` + (r.isBest ? "<br>¡Nuevo récord!" : ""),
-          buttons: [{ label: "Otra vez", do: () => play(L) }, { label: "Niveles", ghost: true, do: chooser }] });
+        const nx = winLevel("buscaminas", LEVELS, L.id);
+        modal({ icon: "🚩", title: "¡Despejado!", text: `${L.name} en <b>${fmtTime(T.get())}</b>` + (r.isBest ? "<br>¡Nuevo récord!" : "") + unlockText(nx),
+          buttons: [nx ? { label: "Jugar " + nx.name, do: () => play(nx) } : { label: "Otra vez", do: () => play(L) }, { label: "Niveles", ghost: true, do: chooser }] });
       }
       function draw() {
         let f = 0;

@@ -1,5 +1,5 @@
 // Mente — núcleo de la app: navegación, guardado, récords, racha y actualizaciones.
-const APP_VERSION = "1";
+const APP_VERSION = "2";
 const CACHE = "mente";
 
 const App = (() => {
@@ -72,6 +72,31 @@ const App = (() => {
     for (let i = days.length - 2; i >= 0; i--) { if (days[i] === last - 1) { n++; last = days[i]; } else break; }
     return n;
   }
+
+  // ---------- niveles que se desbloquean ----------
+  // Un nivel se habilita después de ganar NEED partidas en el nivel anterior.
+  const NEED = 3;
+  const winsOf = (game, id) => (store.get("wins", {})[game + ":" + id] || 0);
+  function unlocked(game, levels, i) {
+    if (i === 0) return true;
+    return winsOf(game, levels[i - 1].id) >= NEED || winsOf(game, levels[i].id) > 0 || getRec(game, levels[i].id) != null;
+  }
+  // Botón para la lista de niveles: jugable o con candado.
+  function levelBtn(game, levels, i, sub, onPick) {
+    const L = levels[i];
+    if (unlocked(game, levels, i)) return el("button", { onclick: () => onPick(L) }, el("b", {}, L.name), el("small", {}, sub));
+    const prev = levels[i - 1], falta = NEED - winsOf(game, prev.id);
+    return el("button", { class: "locked", disabled: true }, el("b", {}, "🔒 " + L.name),
+      el("small", {}, `Ganá ${falta} ${falta === 1 ? "partida" : "partidas"} más en ${prev.name} para desbloquearlo`));
+  }
+  // Suma una victoria; si con ella se habilita el nivel siguiente, lo devuelve.
+  function winLevel(game, levels, id) {
+    const i = levels.findIndex(l => l.id === id), next = levels[i + 1];
+    const before = next ? unlocked(game, levels, i + 1) : true;
+    const w = store.get("wins", {}); w[game + ":" + id] = (w[game + ":" + id] || 0) + 1; store.set("wins", w);
+    return next && !before && unlocked(game, levels, i + 1) ? next : null;
+  }
+  const unlockText = nx => nx ? `<br><b>🔓 ¡Desbloqueaste ${nx.name}!</b>` : "";
 
   // ---------- ventana de resultado ----------
   function modal({ icon = "🎉", title, text, buttons = [] }) {
@@ -162,5 +187,5 @@ const App = (() => {
     if (c && c.addEventListener) c.addEventListener("change", autoUpdateOnWifi);
   }
 
-  return { register, start, el, $, store, toast, fmtTime, shuffle, rnd, dayNum, timer, record, getRec, played, modal, go };
+  return { register, start, el, $, store, toast, fmtTime, shuffle, rnd, dayNum, timer, record, getRec, played, modal, go, levelBtn, winLevel, unlockText, NEED };
 })();

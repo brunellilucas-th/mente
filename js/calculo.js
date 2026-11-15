@@ -1,10 +1,10 @@
 (() => {
-  const { el, rnd, record, getRec, played, modal } = App;
+  const { el, rnd, record, getRec, played, modal, levelBtn, winLevel, unlockText } = App;
   const DUR = 60;
   const LEVELS = [
-    { id: "facil", name: "Fácil", desc: "Sumas y restas hasta 20" },
-    { id: "medio", name: "Medio", desc: "Sumas, restas y tablas" },
-    { id: "dificil", name: "Difícil", desc: "Las cuatro operaciones, números más grandes" },
+    { id: "facil", name: "Fácil", desc: "Sumas y restas hasta 20", goal: 20 },
+    { id: "medio", name: "Medio", desc: "Sumas, restas y tablas", goal: 15 },
+    { id: "dificil", name: "Difícil", desc: "Las cuatro operaciones, números más grandes", goal: 12 },
   ];
   function make(lv) {
     let a, b, op;
@@ -26,10 +26,10 @@
     const stop = () => { clearInterval(iv); iv = null; };
     function chooser() {
       stop(); stopKey(); ctx.right(); view.innerHTML = "";
-      view.append(el("p", { class: "muted" }, `Resolvé todas las cuentas que puedas en ${DUR} segundos. La respuesta correcta pasa sola a la siguiente.`),
-        el("div", { class: "levels" }, LEVELS.map(L => {
+      view.append(el("p", { class: "muted" }, `Resolvé todas las cuentas que puedas en ${DUR} segundos. La respuesta correcta pasa sola a la siguiente. Una partida cuenta como ganada si llegás a la meta del nivel.`),
+        el("div", { class: "levels" }, LEVELS.map((L, i) => {
           const b = getRec("calculo", L.id);
-          return el("button", { onclick: () => play(L) }, el("b", {}, L.name), el("small", {}, L.desc + (b != null ? ` · récord ${b}` : "")));
+          return levelBtn("calculo", LEVELS, i, L.desc + ` · meta ${L.goal}` + (b != null ? ` · récord ${b}` : ""), play);
         })));
     }
     function play(L) {
@@ -62,8 +62,10 @@
         if (left <= 0 && !done) {
           done = true; stop(); document.removeEventListener("keydown", key); played();
           const r = record("calculo", L.id, ok, "high");
-          modal({ icon: "⚡", title: "¡Tiempo!", text: `<b>${ok}</b> correctas · ${bad} incorrectas` + (r.isBest && ok ? "<br>¡Nuevo récord!" : r.prev != null ? `<br>Récord: ${r.prev}` : ""),
-            buttons: [{ label: "Otra vez", do: () => play(L) }, { label: "Niveles", ghost: true, do: chooser }] });
+          const won = ok >= L.goal, nx = won ? winLevel("calculo", LEVELS, L.id) : null;
+          modal({ icon: won ? "⚡" : "⏱️", title: won ? "¡Meta cumplida!" : "¡Tiempo!", text: `<b>${ok}</b> correctas · ${bad} incorrectas` +
+            (won ? "" : `<br>Meta para ganar: ${L.goal}`) + (r.isBest && ok ? "<br>¡Nuevo récord!" : r.prev != null ? `<br>Récord: ${r.prev}` : "") + unlockText(nx),
+            buttons: [nx ? { label: "Jugar " + nx.name, do: () => play(nx) } : { label: "Otra vez", do: () => play(L) }, { label: "Niveles", ghost: true, do: chooser }] });
         }
       }, 100);
       stopKey = () => document.removeEventListener("keydown", key);

@@ -1,5 +1,5 @@
 (() => {
-  const { el, store, fmtTime, shuffle, timer, record, getRec, played, modal, toast } = App;
+  const { el, store, fmtTime, shuffle, timer, record, getRec, played, modal, toast, levelBtn, winLevel, unlockText } = App;
   const LEVELS = [
     { id: "facil", name: "Fácil", clues: 40, desc: "Para entrar en calor" },
     { id: "medio", name: "Medio", clues: 32, desc: "Hay que pensar un poco" },
@@ -56,10 +56,10 @@
     function chooser() {
       if (T) { T.kill(); T = null; }
       ctx.right(); view.innerHTML = "";
-      view.append(el("p", { class: "muted" }, "Elegí la dificultad:"),
-        el("div", { class: "levels" }, LEVELS.map(L => {
+      view.append(el("p", { class: "muted" }, "Elegí la dificultad. Cada nivel se desbloquea ganando 3 partidas del anterior sin usar pistas."),
+        el("div", { class: "levels" }, LEVELS.map((L, i) => {
           const b = getRec("sudoku", L.id);
-          return el("button", { onclick: () => start(L) }, el("b", {}, L.name), el("small", {}, L.desc + (b != null ? " · récord " + fmtTime(b) : "")));
+          return levelBtn("sudoku", LEVELS, i, L.desc + (b != null ? " · récord " + fmtTime(b) : ""), start);
         })));
       if (S && !S.done) view.append(el("button", { class: "btn ghost", style: "margin-top:14px;width:100%", onclick: () => play() }, "Seguir con la partida guardada"));
     }
@@ -136,9 +136,10 @@
       T.end(); S.time = T.get(); S.done = true; store.set("sudoku", S); played();
       const L = LEVELS.find(l => l.id === S.level);
       const r = S.hints ? { isBest: false } : record("sudoku", S.level, Math.round(S.time), "low");
+      const nx = S.hints ? null : winLevel("sudoku", LEVELS, S.level);
       modal({ icon: "🧩", title: "¡Resuelto!", text: `${L.name} en <b>${fmtTime(S.time)}</b> · ${S.errors} error${S.errors === 1 ? "" : "es"}` +
-        (S.hints ? `<br>Usaste ${S.hints} pista${S.hints === 1 ? "" : "s"} (no cuenta como récord)` : r.isBest ? "<br>¡Nuevo récord!" : ""),
-        buttons: [{ label: "Otro", do: chooser }, { label: "Ver tablero", ghost: true }] });
+        (S.hints ? `<br>Usaste ${S.hints} pista${S.hints === 1 ? "" : "s"} (no cuenta como récord ni para desbloquear niveles)` : r.isBest ? "<br>¡Nuevo récord!" : "") + unlockText(nx),
+        buttons: nx ? [{ label: "Jugar " + nx.name, do: () => start(nx) }, { label: "Ver tablero", ghost: true }] : [{ label: "Otro", do: chooser }, { label: "Ver tablero", ghost: true }] });
       draw();
     }
     function draw() {

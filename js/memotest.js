@@ -1,5 +1,5 @@
 (() => {
-  const { el, fmtTime, shuffle, timer, record, getRec, played, modal } = App;
+  const { el, fmtTime, shuffle, timer, record, getRec, played, modal, levelBtn, winLevel, unlockText } = App;
   const EMOJI = ["🍎","🍋","🍇","🍉","🍒","🥑","🌵","🌻","🐶","🐱","🦊","🐼","🐸","🦉","🐙","🦋","⚽","🎸","🚲","✈️","⏰","🎈","🔑","🌙","⭐","🔥","❄️","🍕","🧩","🎲"];
   const LEVELS = [
     { id: "4x4", name: "Fácil", cols: 4, pairs: 8, desc: "16 cartas" },
@@ -12,9 +12,9 @@
     const chooser = () => {
       if (T) { T.kill(); T = null; } ctx.right(); view.innerHTML = "";
       view.append(el("p", { class: "muted" }, "Encontrá todas las parejas con la menor cantidad de jugadas."),
-        el("div", { class: "levels" }, LEVELS.map(L => {
+        el("div", { class: "levels" }, LEVELS.map((L, i) => {
           const m = getRec("memotest", L.id);
-          return el("button", { onclick: () => play(L) }, el("b", {}, L.name), el("small", {}, L.desc + (m != null ? ` · récord ${m} jugadas` : "")));
+          return levelBtn("memotest", LEVELS, i, L.desc + (m != null ? ` · récord ${m} jugadas` : ""), play);
         })));
     };
     function play(L) {
@@ -46,8 +46,9 @@
         T.end(); played();
         const r = record("memotest", L.id, moves, "low");
         record("memotest", L.id + "-t", Math.round(T.get()), "low");
-        setTimeout(() => modal({ icon: "🧠", title: "¡Completo!", text: `${moves} jugadas en ${fmtTime(T.get())}` + (r.isBest ? "<br>¡Nuevo récord!" : r.prev != null ? `<br>Récord: ${r.prev} jugadas` : ""),
-          buttons: [{ label: "Otra vez", do: () => play(L) }, { label: "Niveles", ghost: true, do: chooser }] }), 350);
+        const nx = winLevel("memotest", LEVELS, L.id);
+        setTimeout(() => modal({ icon: "🧠", title: "¡Completo!", text: `${moves} jugadas en ${fmtTime(T.get())}` + (r.isBest ? "<br>¡Nuevo récord!" : r.prev != null ? `<br>Récord: ${r.prev} jugadas` : "") + unlockText(nx),
+          buttons: [nx ? { label: "Jugar " + nx.name, do: () => play(nx) } : { label: "Otra vez", do: () => play(L) }, { label: "Niveles", ghost: true, do: chooser }] }), 350);
       }
     }
     chooser();

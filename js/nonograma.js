@@ -1,5 +1,5 @@
 (() => {
-  const { el, store, fmtTime, timer, record, getRec, played, modal } = App;
+  const { el, store, fmtTime, timer, record, getRec, played, modal, levelBtn, winLevel, unlockText } = App;
   const LEVELS = [
     { id: "5", name: "Fácil", n: 5, desc: "5×5" },
     { id: "8", name: "Medio", n: 8, desc: "8×8" },
@@ -13,9 +13,9 @@
     function chooser() {
       if (T) { T.kill(); T = null; } ctx.right(); view.innerHTML = "";
       view.append(el("p", { class: "muted" }, "Pintá las casillas según los números: cada número es un bloque seguido de casillas pintadas, en ese orden, con al menos un espacio entre bloques."),
-        el("div", { class: "levels" }, LEVELS.map(L => {
+        el("div", { class: "levels" }, LEVELS.map((L, i) => {
           const b = getRec("nonograma", L.id);
-          return el("button", { onclick: () => start(L) }, el("b", {}, L.name), el("small", {}, L.desc + (b != null ? ` · récord ${fmtTime(b)}` : "")));
+          return levelBtn("nonograma", LEVELS, i, L.desc + (b != null ? ` · récord ${fmtTime(b)}` : ""), start);
         })));
       if (S && !S.done) view.append(el("button", { class: "btn ghost", style: "margin-top:14px;width:100%", onclick: play }, "Seguir con la partida guardada"));
     }
@@ -98,8 +98,9 @@
           S.done = true; T.end(); S.time = T.get(); store.set("nono", S); played();
           for (let i = 0; i < n * n; i++) if (S.cur[i] !== 1) { S.cur[i] = 2; drawCell(i); }
           const r = record("nonograma", S.level, Math.round(S.time), "low");
-          setTimeout(() => modal({ icon: "🖼️", title: "¡Resuelto!", text: `${n}×${n} en <b>${fmtTime(S.time)}</b>` + (r.isBest ? "<br>¡Nuevo récord!" : ""),
-            buttons: [{ label: "Otro", do: () => start(L) }, { label: "Niveles", ghost: true, do: chooser }] }), 250);
+          const nx = winLevel("nonograma", LEVELS, S.level);
+          setTimeout(() => modal({ icon: "🖼️", title: "¡Resuelto!", text: `${n}×${n} en <b>${fmtTime(S.time)}</b>` + (r.isBest ? "<br>¡Nuevo récord!" : "") + unlockText(nx),
+            buttons: [nx ? { label: "Jugar " + nx.name, do: () => start(nx) } : { label: "Otro", do: () => start(L) }, { label: "Niveles", ghost: true, do: chooser }] }), 250);
         }
       }
       cells.forEach((_, i) => drawCell(i)); clues();
