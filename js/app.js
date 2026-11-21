@@ -1,5 +1,5 @@
 // Mente — núcleo de la app: navegación, guardado, récords, racha y actualizaciones.
-const APP_VERSION = "2";
+const APP_VERSION = "3";
 const CACHE = "mente";
 
 const App = (() => {

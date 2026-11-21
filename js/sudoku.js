@@ -158,7 +158,7 @@
         else if (S.notes[i]) { c.innerHTML = ""; const n = el("div", { class: "nt" }); for (let d = 1; d <= 9; d++) n.append(el("span", {}, S.notes[i] & (1 << d) ? String(d) : "")); c.append(n); }
         else c.textContent = "";
       });
-      [...padEl.children].forEach((b, k) => { b.classList.toggle("done", count[k + 1] >= 9); b.lastChild.textContent = 9 - count[k + 1] || ""; });
+      [...padEl.children].forEach((b, k) => { b.classList.toggle("done", count[k + 1] >= 9); b.classList.toggle("cur", sv === k + 1); b.lastChild.textContent = 9 - count[k + 1] || ""; });
       notesBtn.classList.toggle("on", notes);
       errEl.textContent = "❌ " + S.errors;
     }
