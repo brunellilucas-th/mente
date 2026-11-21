@@ -1,7 +1,6 @@
 (() => {
   const { el, store, record, getRec, played, modal } = App;
-  const COLORS = { 2: "#e4ddff", 4: "#cbbcff", 8: "#c4650f", 16: "#b04f0c", 32: "#b83a22", 64: "#b8301f", 128: "#f2cf4a", 256: "#ecc22e", 512: "#e3b417", 1024: "#1f8a6e", 2048: "#146b54" };
-  const DARK_TEXT = new Set([2, 4, 128, 256, 512]);
+  const COLORS = { 2: "#f1e7da", 4: "#ead8c0", 8: "#f2c49b", 16: "#eeb084", 32: "#e99f80", 64: "#e38c70", 128: "#eed38f", 256: "#e8c977", 512: "#e1bd5f", 1024: "#bcd6a9", 2048: "#a2cb97" };
 
   function mount(view, ctx) {
     let S = store.get("2048");
@@ -75,8 +74,8 @@
       [...board.children].forEach((c, i) => {
         const v = S.g[i];
         c.textContent = v || "";
-        c.style.background = v ? (COLORS[v] || "#3b23a8") : "";
-        c.style.color = DARK_TEXT.has(v) ? "#1d1a29" : "#fff";
+        c.style.background = v ? (COLORS[v] || "#cdbde2") : "";
+        c.style.color = "#3d322a";
         c.style.fontSize = v >= 1024 ? "min(7vw,30px)" : v >= 128 ? "min(8vw,35px)" : "";
         c.classList.toggle("new", i === ni);
       });

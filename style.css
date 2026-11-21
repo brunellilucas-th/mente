@@ -1,15 +1,13 @@
 :root{
-  --bg:#f4f2fb;--card:#ffffff;--ink:#1d1a29;--muted:#6f6a80;--line:#e2deef;--soft:#ece8f8;
-  --accent:#5b3be0;--accent-ink:#fff;--accent-soft:#e6e0ff;--good:#16804f;--warn:#b86e0a;--bad:#c62f2f;--num:700;
-  --cell:#ffffff;--given:#1d1a29;--entered:#4325c4;--hl:#ece8fb;--same:#c4b6ff;--same-ink:#1d1a29;--tile:#b6aaee;--tile-o:#ffffff;--sel:#5b3be0;
+  /* Paleta clara y cálida, suave para la vista */
+  --bg:#f6f1e9;--card:#fffcf7;--ink:#3d322a;--muted:#86786c;--line:#e7ddd0;--soft:#efe6da;
+  --accent:#8c6a4f;--accent-ink:#fff;--accent-soft:#eadccb;--good:#5e8f4f;--warn:#a87720;--bad:#b4483c;--num:700;
+  --cell:#fffcf7;--given:#3d322a;--entered:#8c6a4f;--hl:#f3eadf;--same:#e6d2b8;--same-ink:#3d322a;--sel:#7a5538;
+  --tile:#dccbb6;--tile-o:#fffcf7;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#15131c;--card:#211e2b;--ink:#f1eefa;--muted:#a39db6;--line:#36313f;--soft:#2b2737;
-  --accent:#8b72ff;--accent-ink:#fff;--accent-soft:#332b55;--good:#2a9d66;--warn:#c98515;--bad:#ff7a7a;--num:700;
-  --cell:#1c1925;--given:#f1eefa;--entered:#b9a9ff;--hl:#2a2541;--same:#5a4aa8;--same-ink:#ffffff;--tile:#4b3f8f;--tile-o:#2b2737;--sel:#5b3be0;
-  color-scheme:dark;
-}}
+/* Sudoku en gama de marrones */
+.sdk,.pad,.tools{--ink:#6b4a33;--cell:#fffaf2;--given:#3b2a1e;--entered:#9a6438;--hl:#f4e9da;--same:#e3c9a6;--same-ink:#3b2a1e;--sel:#7a4e2d;--accent:#7a4e2d;--accent-soft:#efe0cc;--bad:#b4483c}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.35 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
@@ -118,8 +116,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-
 .mines button{aspect-ratio:1;background:var(--tile);border-radius:4px;font-weight:var(--num);font-size:min(4.6vw,20px);display:flex;align-items:center;justify-content:center;padding:0}
 .mines button.o{background:var(--tile-o);box-shadow:inset 0 0 0 1px var(--line)}
 .mines button.boom{background:var(--bad)}
-.n1{color:#1f5fd6}.n2{color:#16804f}.n3{color:#c62f2f}.n4{color:#6a2fc0}.n5{color:#9a4f0c}.n6{color:#0f7a7a}.n7{color:#333}.n8{color:#666}
-@media (prefers-color-scheme:dark){.n1{color:#7fb0ff}.n2{color:#5fd39a}.n3{color:#ff8a8a}.n4{color:#c9a6ff}.n5{color:#ffb36b}.n6{color:#5fdada}.n7{color:#ddd}.n8{color:#aaa}}
+.n1{color:#3f6aa8}.n2{color:#4e7f40}.n3{color:#b4483c}.n4{color:#6f4f9a}.n5{color:#8a5a2b}.n6{color:#3d7f7a}.n7{color:#3d322a}.n8{color:#86786c}
 
 /* nonograma */
 .nono{display:grid;touch-action:none;margin:0 auto}
